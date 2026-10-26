@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Math-Check 6-сынып | ЖИ аудиті және Адал азамат</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    
+    <!-- KaTeX формулалар жүйесі -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js" onload="renderMathInBody()"></script>
+    
+    <!-- QR Code Generator Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+            --accent-color: #f43f5e;
+            --bg-light: #f8fafc;
+            --card-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+        }
+        
+        body { 
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; 
+            background-color: var(--bg-light); 
+            color: #1e293b;
+            overflow-x: hidden;
+        }
+
+        /* Анимациялар */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes pulseGlow {
+            0% { box-shadow: 0 0 0 0 rgba(79, 70, 229, 0.4); }
+            70% { box-shadow: 0 0 0 12px rgba(79, 70, 229, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(79, 70, 229, 0); }
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-8px); }
+            100% { transform: translateY(0px); }
+        }
+
+        .animate-fade-in { animation: fadeInUp 0.6s ease-out forwards; }
+        .animate-float { animation: float 4s ease-in-out infinite; }
+        .pulse-btn { animation: pulseGlow 2s infinite; }
+
+        .hero-section { 
+            background: var(--primary-gradient); 
+            color: white; 
+            padding: 65px 0; 
+            border-bottom-left-radius: 30px; 
+            border-bottom-right-radius: 30px;
+            position: relative;
+        }
+
+        .card-custom { 
+            border: none; 
+            border-radius: 16px; 
+            box-shadow: var(--card-shadow); 
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
+            background: #ffffff;
+        }
+
+        .card-custom:hover { 
+            transform: translateY(-6px) scale(1.01); 
+            box-shadow: 0 20px 30px -10px rgba(79, 70, 229, 0.15); 
+        }
+
+        .badge-value { background-color: #fef3c7; color: #92400e; font-weight: 600; font-size: 0.8rem; border-radius: 8px; padding: 6px 10px; border: 1px solid #fde68a; }
+        .badge-topic { background-color: #e0e7ff; color: #3730a3; font-weight: 600; font-size: 0.8rem; border-radius: 8px; padding: 6px 10px; }
+        .badge-super { background-color: #881337; color: #ffffff; font-weight: 700; font-size: 0.8rem; border-radius: 8px; padding: 6px 10px; }
+        
+        .prompt-box { 
+            background-color: #0f172a; 
+            color: #38bdf8; 
+            font-family: 'Consolas', 'Courier New', monospace; 
+            padding: 18px; 
+            border-radius: 12px; 
+            font-size: 0.9rem; 
+            line-height: 1.6; 
+            border: 1px solid #334155; 
+        }
+
+        .interactive-board { 
+            background: #ffffff; 
+            border: 2px solid #818cf8; 
+            border-radius: 20px; 
+            padding: 25px; 
+            box-shadow: var(--card-shadow); 
+        }
+
+        .lang-btn { cursor: pointer; opacity: 0.6; font-weight: 700; transition: opacity 0.2s; padding: 4px 10px; border-radius: 6px; }
+        .lang-btn.active { opacity: 1; background-color: rgba(255, 255, 255, 0.25); border: 1px solid rgba(255,255,255,0.4); }
+        .value-pill { background: #ffffff; border: 1px solid #e2e8f0; padding: 12px 16px; border-radius: 14px; font-size: 0.9rem; font-weight: 600; display: flex; align-items: center; gap: 10px; transition: transform 0.2s; }
+        .value-pill:hover { transform: scale(1.03); }
+
+        /* A4 Бланк стильдері */
+        #printable-worksheet {
+            background: white;
+            color: black;
+            font-family: 'Times New Roman', serif;
+            padding: 35px;
+            border: 2px solid #000;
+            margin-top: 15px;
+            border-radius: 8px;
+            position: relative;
+        }
+
+        .qr-print-box {
+            position: absolute;
+            top: 25px;
+            right: 25px;
+            text-align: center;
+        }
+
+        @media print {
+            body { background: white !important; color: black !important; }
+            .no-print { display: none !important; }
+            #printable-worksheet { display: block !important; border: none !important; padding: 0 !important; margin: 0 !important; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Навигация -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top no-print">
+        <div class="container">
+            <a class="navbar-brand fw-bold fs-4" href="#"><i class="bi bi-patch-check-fill text-warning me-2"></i>Math-Check <span class="badge bg-primary fs-6">6-сынып</span></a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto align-items-center gap-2">
+                    <li class="nav-item"><a class="nav-link text-white fw-semibold" href="#values" id="nav-values">«Адал азамат»</a></li>
+                    <li class="nav-item"><a class="nav-link text-white fw-semibold" href="#cases" id="nav-cases">Кейстер банкі</a></li>
+                    <li class="nav-item"><a class="nav-link text-white fw-semibold" href="#generator" id="nav-gen">Промпт конструкторы</a></li>
+                    <li class="nav-item"><a class="nav-link text-white fw-semibold" href="#auditor" id="nav-sim">Аудит тренажеры</a></li>
+                    <li class="nav-item ms-lg-3 text-white bg-secondary bg-opacity-25 px-2 py-1 rounded">
+                        <span class="lang-btn active" id="btn-kk" onclick="switchLang('kk')">ҚАЗ</span> / 
+                        <span class="lang-btn" id="btn-ru" onclick="switchLang('ru')">РУС</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Секция -->
+    <section class="hero-section text-center no-print">
+        <div class="container animate-fade-in">
+            <div class="d-inline-flex align-items-center gap-2 badge bg-white bg-opacity-20 text-white mb-3 px-3 py-2 rounded-pill fs-6 border border-white border-opacity-25 animate-float">
+                <i class="bi bi-award-fill text-warning"></i> <span id="hero-badge">«Адал азамат» – сапалы білім мен тәрбие негізі</span>
+            </div>
+            <h1 class="display-5 fw-bold mb-3" id="hero-title">Math-Check: 6-сынып ЖИ аудиті</h1>
+            <p class="lead max-w-700 mx-auto opacity-90 mb-4 fs-5" id="hero-desc">
+                6-сынып математикасы сабақтарында жасанды интеллектті «қателесетін цифрлық оқушыға» айналдыру арқылы оқушылардың академикалық адалдығы мен сыни ойлауын дамыту әдістемесі.
+            </p>
+            <div class="d-flex justify-content-center gap-3">
+                <a href="#cases" class="btn btn-warning btn-lg text-dark fw-bold px-4 shadow-sm pulse-btn" id="btn-hero-cases"><i class="bi bi-grid-3x3-gap-fill me-2"></i>Кейстерді көру</a>
+                <a href="#auditor" class="btn btn-outline-light btn-lg px-4 fw-semibold" id="btn-hero-sim"><i class="bi bi-play-circle-fill me-2"></i>Тренажерді бастау</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- «Адал азамат» құндылықтары -->
+    <section id="values" class="py-4 no-print">
+        <div class="container">
+            <div class="text-center mb-4">
+                <h2 class="fw-bold fs-3" id="val-title">«Адал азамат» ұлттық тұжырымдамасы мен математика</h2>
+                <p class="text-muted small" id="val-sub">Математика сабағында қалыптасатын негізгі азаматтық қасиеттер</p>
+            </div>
+            <div class="row g-3 justify-content-center">
+                <div class="col-md-4 col-lg-3"><div class="value-pill"><i class="bi bi-shield-check text-primary fs-4"></i><span id="v1">Академиялық адалдық</span></div></div>
+                <div class="col-md-4 col-lg-3"><div class="value-pill"><i class="bi bi-check-circle-fill text-success fs-4"></i><span id="v2">Өз ісіне жауапкершілік</span></div></div>
+                <div class="col-md-4 col-lg-3"><div class="value-pill"><i class="bi bi-cpu-fill text-info fs-4"></i><span id="v3">Сыни ойлау мәдениеті</span></div></div>
+                <div class="col-md-4 col-lg-3"><div class="value-pill"><i class="bi bi-hammer text-warning fs-4"></i><span id="v4">Еңбекқорлық пен талап</span></div></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Кейстер банкі -->
+    <section id="cases" class="py-5 bg-white no-print">
+        <div class="container">
+            <div class="text-center mb-4">
+                <h2 class="fw-bold" id="cases-title">6-сынып математика кейстерінің банкі</h2>
+                <p class="text-muted" id="cases-sub">ҚР ББЖМ 6-сынып бағдарламасы бойынша ЖИ қателіктері салынған тапсырмалар</p>
+                
+                <div class="d-flex flex-wrap justify-content-center gap-2 mt-3" id="topic-filter">
+                    <button type="button" class="btn btn-primary btn-sm fw-semibold rounded-pill active" data-topic="all" id="f-all">Барлық бағыттар</button>
+                    <button type="button" class="btn btn-danger btn-sm fw-bold rounded-pill" data-topic="super" id="f-super"><i class="bi bi-fire me-1"></i>Көпқадамды (Күрделі)</button>
+                    <button type="button" class="btn btn-outline-primary btn-sm fw-semibold rounded-pill" data-topic="brackets" id="f-br">Жақшаны ашу</button>
+                    <button type="button" class="btn btn-outline-primary btn-sm fw-semibold rounded-pill" data-topic="module" id="f-mod">Модуль</button>
+                    <button type="button" class="btn btn-outline-primary btn-sm fw-semibold rounded-pill" data-topic="proportion" id="f-prop">Пропорция</button>
+                    <button type="button" class="btn btn-outline-primary btn-sm fw-semibold rounded-pill" data-topic="rational" id="f-rat">Рационал сандар</button>
+                    <button type="button" class="btn btn-outline-primary btn-sm fw-semibold rounded-pill" data-topic="equation" id="f-eq">Сызықтық теңдеулер</button>
+                </div>
+            </div>
+
+            <div class="row g-4" id="cases-container"></div>
+        </div>
+    </section>
+
+    <!-- Промпт Конструкторы -->
+    <section id="generator" class="py-5 no-print">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-5">
+                    <h2 class="fw-bold mb-3" id="gen-title">Мұғалімге арналған промпт конструкторы</h2>
+                    <p class="text-muted mb-4" id="gen-desc">6-сынып тақырыптары бойынша ChatGPT немесе Gemini-ге арналған арнайы дидактикалық сұраныс дайындаңыз.</p>
+                    <form id="prompt-form">
+                        <div class="mb-3">
+                            <label class="form-label fw-bold" id="lbl-topic">6-сынып математика бөлімі:</label>
+                            <select class="form-select border-2" id="p-topic">
+                                <option value="brackets">Көпқадамды жақшалы өрнектер</option>
+                                <option value="module">Модуль мен дәрежесі бар теңдеулер</option>
+                                <option value="proportion">Күрделі бөлшекті пропорциялар</option>
+                                <option value="rational">Рационал сандарға көпқадамды амалдар</option>
+                                <option value="equation">Көп сатылы сызықтық теңдеулер</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold" id="lbl-err">Жасырын логикалық қате түрі:</label>
+                            <select class="form-select border-2" id="p-err">
+                                <option value="order">Көпқадамды өрнектегі амалдар ретін бұзу</option>
+                                <option value="sign">Ішпеш жақша алдындағы минус таңбасын жоғалту</option>
+                                <option value="degree">Теріс санның дәрежесі мен модулін шатастыру</option>
+                            </select>
+                        </div>
+                        <button type="button" class="btn btn-primary w-100 fw-bold py-2 shadow-sm" onclick="generatePrompt()" id="btn-gen-prompt">
+                            <i class="bi bi-magic me-2"></i>Промпт құрастыру
+                        </button>
+                    </form>
+                </div>
+                <div class="col-lg-7 mt-4 mt-lg-0">
+                    <div class="card card-custom border-0 shadow">
+                        <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center py-3">
+                            <span class="fw-bold"><i class="bi bi-terminal-fill text-success me-2"></i><span id="gen-card-title">ЖИ-ге арналған промпт</span></span>
+                            <button class="btn btn-sm btn-outline-light" onclick="copyPrompt()" id="btn-copy">
+                                <i class="bi bi-clipboard me-1"></i>Көшіріп алу
+                            </button>
+                        </div>
+                        <div class="card-body bg-dark">
+                            <div class="prompt-box" id="prompt-result">
+                                «Промпт құрастыру» батырмасын басыңыз...
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Интерактивті Аудит Тренажеры -->
+    <section id="auditor" class="py-5 bg-white no-print">
+        <div class="container">
+            <div class="text-center mb-4">
+                <h2 class="fw-bold" id="sim-title">«Digital Auditor» интерактивті тренажеры</h2>
+                <p class="text-muted" id="sim-sub">Сарапшы рөліне ен: ЖИ шешіміндегі қатені тап және негізде</p>
+            </div>
+
+            <div class="interactive-board max-w-800 mx-auto">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <span class="badge bg-danger px-3 py-2 fs-6">Аудит-Кейс: 6-сынып</span>
+                    <span class="badge badge-value"><i class="bi bi-shield-check me-1"></i>Академиялық адалдық</span>
+                </div>
+                
+                <h5 class="fw-bold fs-5 text-dark" id="sim-q-title">Тапсырма: Амалдарды орындаңыз және өрнекті ықшамдаңыз: $7 - 2(x - 4)$</h5>
+                
+                <div class="bg-light p-3 rounded-3 my-3 border border-2">
+                    <h6 class="text-primary fw-bold mb-2"><i class="bi bi-robot me-2"></i>ChatGPT берген «мінезсіз» шешім:</h6>
+                    <p class="mb-1" id="sim-step1"><strong>1-қадам:</strong> Жақшаны ашамыз: $7 - 2 \cdot x - 2 \cdot 4$</p>
+                    <p class="mb-1" id="sim-step2"><strong>2-қадам:</strong> Көбейтуді орындаймыз: $7 - 2x - 8$</p>
+                    <p class="mb-1" id="sim-step3"><strong>3-қадам:</strong> Ұқсас мүшелерді біріктіреміз: $(7 - 8) - 2x = -1 - 2x$</p>
+                    <p class="mb-0 text-danger fw-bold" id="sim-ai-ans">ЖИ жауабы: $-1 - 2x$</p>
+                </div>
+
+                <form id="audit-sim-form" onsubmit="checkAudit(event)">
+                    <div class="mb-3">
+                        <label class="form-label fw-bold" id="sim-lbl-step">1. Жасанды интеллект қай қадамда логикалық қате жіберді?</label>
+                        <select class="form-select border-2" id="user-step" required>
+                            <option value="" id="sim-opt-0">Қадамды таңдаңыз...</option>
+                            <option value="1" id="sim-opt-1">1-қадам (Жақшаны ашу)</option>
+                            <option value="2" id="sim-opt-2">2-қадам (Көбейтуді орындау)</option>
+                            <option value="3" id="sim-opt-3">3-қадам (Ұқсас мүшелерді біріктіру)</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold" id="sim-lbl-reason">2. Математикалық негіздемеңіз бен «Адал азамат» түйіні:</label>
+                        <textarea class="form-textarea form-control border-2" id="user-reason" rows="2" placeholder="Қай ереже бұзылды және неліктен дайын жауапқа соқыр сенуге болмайды?..." required></textarea>
+                    </div>
+                    <div class="d-flex flex-wrap gap-2">
+                        <button type="submit" class="btn btn-success fw-bold flex-grow-1 py-2" id="btn-sim-send"><i class="bi bi-check-circle me-1"></i>Тексеруге жіберу</button>
+                        <button type="button" class="btn btn-primary fw-bold px-4 py-2" onclick="printWorksheet()"><i class="bi bi-printer me-1"></i><span id="btn-print-lbl">Бланкты жүктеу (PDF)</span></button>
+                    </div>
+                </form>
+
+                <div id="audit-feedback" class="mt-4 d-none"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ДИНАМИКАЛЫҚ А4 ЖҰМЫС ПАРАҒЫ ЖӘНЕ QR КОД БӨЛІМІ -->
+    <div class="container py-4">
+        <!-- Бланк Таңдау & QR Сілтеме Редактор -->
+        <div class="no-print bg-white p-4 rounded-3 shadow-sm border mb-4">
+            <div class="row align-items-center g-3">
+                <div class="col-md-7">
+                    <h5 class="fw-bold mb-2 text-primary"><i class="bi bi-file-earmark-text me-2"></i>Бланк тақырыбын интерактивті таңдау:</h5>
+                    <div class="d-flex flex-wrap gap-2" id="sheet-case-selector"></div>
+                </div>
+                <div class="col-md-5 border-start ps-md-4">
+                    <h6 class="fw-bold mb-2 text-dark"><i class="bi bi-qr-code me-2"></i>QR-код сілтемесін баптау:</h6>
+                    <div class="input-group input-group-sm">
+                        <input type="text" id="qr-url-input" class="form-control" value="file:///Users/dalilasagandykova/Downloads/gemini-code-1793036727825.html#auditor" placeholder="Сайт немесе тренажер сілтемесі...">
+                        <button class="btn btn-outline-primary" type="button" onclick="updateQRCode()">Жаңарту</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- А4 Бланк -->
+        <div id="printable-worksheet">
+            <!-- QR код басып шығарылатын орын -->
+            <div class="qr-print-box">
+                <div id="qrcode"></div>
+                <span style="font-size: 8pt; font-weight: bold; display: block; margin-top: 4px;">Скан арқылы өту</span>
+            </div>
+
+            <div style="text-align: center; border-bottom: 2px solid #000; padding-bottom: 10px; margin-bottom: 20px;">
+                <h3 style="margin: 0; font-size: 18pt; text-transform: uppercase; font-weight: bold;" id="p-head-title">«DIGITAL AUDITOR» РАБОЧИЙ ЛИСТ / ЖҰМЫС ПАРАҒЫ</h3>
+                <p style="margin: 5px 0 0; font-size: 11pt; font-style: italic;" id="p-head-sub">6-сынып математикасы | Академиялық адалдық пен сыни ойлау аудиті</p>
+            </div>
+
+            <div style="display: flex; justify-content: space-between; margin-bottom: 20px; font-size: 11pt; width: 75%;">
+                <div><strong id="p-lbl-name">Оқушының аты-жөні:</strong> ___________________________</div>
+                <div><strong id="p-lbl-class">Сыныбы:</strong> 6 «___»</div>
+                <div><strong id="p-lbl-date">Күні:</strong> ____________</div>
+            </div>
+
+            <div style="border: 1px solid #000; padding: 12px; margin-bottom: 15px; background-color: #f8fafc;">
+                <strong style="font-size: 11pt;" id="p-sec1-title">1. ТАҚЫРЫП ЖӘНЕ ТАПСЫРМА (БӨЛІМ):</strong>
+                <p style="margin: 5px 0 0; font-size: 11pt; font-weight: bold;" id="p-sec1-q">Тапсырма: Амалдарды орындаңыз: $7 - 2(x - 4)$</p>
+            </div>
+
+            <div style="border: 1px solid #000; padding: 12px; margin-bottom: 15px;">
+                <strong style="font-size: 11pt;" id="p-sec2-title">2. ЖАСАНДЫ ИНТЕЛЛЕКТТІҢ ШЕШІМІ (АУДИТ ОБЪЕКТІСІ):</strong>
+                <p style="margin: 5px 0; font-size: 11pt; font-family: monospace;" id="p-sec2-sol">
+                    1-қадам: $7 - 2 \cdot x - 2 \cdot 4$<br>
+                    2-қадам: $7 - 2x - 8$<br>
+                    3-қадам: $-1 - 2x$
+                </p>
+            </div>
+
+            <div style="border: 1px solid #000; padding: 12px; margin-bottom: 15px;">
+                <strong style="font-size: 11pt;" id="p-sec3-title">3. САРАПШЫ АУДИТІ ЖӘНЕ ДӘЛЕЛДЕМЕ:</strong>
+                <p style="margin: 8px 0 0; font-size: 11pt;"><strong id="p-lbl-step-num">Қате жіберілген қадам № / логикалық ауытқу:</strong> ______</p>
+                <p style="margin: 8px 0 0; font-size: 11pt;"><strong id="p-lbl-reason">Математикалық ережесі мен негіздемесі:</strong></p>
+                <div style="border-bottom: 1px dashed #000; height: 25px; margin-top: 5px;"></div>
+                <div style="border-bottom: 1px dashed #000; height: 25px; margin-top: 5px;"></div>
+            </div>
+
+            <div style="border: 1px solid #000; padding: 12px; margin-bottom: 15px; background-color: #f8fafc;">
+                <strong style="font-size: 11pt;" id="p-sec4-title">4. ДҰРЫС МАТЕМАТИКАЛЫҚ ШЕШІМІ:</strong>
+                <div style="height: 50px;"></div>
+            </div>
+
+            <div style="border: 2px solid #000; padding: 12px; background-color: #fff;">
+                <strong style="font-size: 11pt;" id="p-sec5-title">5. «АДАЛ АЗАМАТ» ӨНЕГЕСІ (Азаматтық рефлексия):</strong>
+                <p style="margin: 5px 0 0; font-size: 10pt; font-style: italic;" id="p-sec5-sub">Дайын жауапты көшіре салу неліктен өзіңді де, өзгелерді де алдау болып табылады?</p>
+                <div style="border-bottom: 1px dashed #000; height: 25px; margin-top: 5px;"></div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="bg-dark text-white py-4 text-center no-print">
+        <div class="container">
+            <p class="mb-0 small opacity-75">Math-Check © 2026 | 6-сынып математика пәні бойынша «Адал азамат» тұжырымдамасын енгізу жобасы</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        let currentLang = 'kk';
+        let qrCodeInstance = null;
+
+        const casesData = [
+            {
+                id: 1,
+                grade: 6,
+                isSuper: true,
+                topicCat: "brackets",
+                topic: { kk: "Көпқадамды өрнектер", ru: "Многошаговые выражения" },
+                title: { kk: "Көпқабатты ішпеш жақшаларды ықшамдау", ru: "Раскрытие многослойных скобок" },
+                value: { kk: "Сыни ойлау", ru: "Критическое мышление" },
+                aiAns: "$15 - 2\\{3x - [4 - 2(x - 5)]\\} = 15 - 6x + 8 - 4x + 20 = 43 - 10x$",
+                errStep: { kk: "ЖИ амалдар ретін бұзып, ішкі жақшадағы $-2(-5) = +10$ санын ескермей, сыртқы сандарды бірден көбейте салған.", ru: "Нарушен порядок действий: при раскрытии внутренних скобок знак $-2(-5) = +10$ потерян." },
+                realSolution: { kk: "$15 - 2\\{3x - [4 - 2x + 10]\\} = 15 - 2(5x - 14) = 43 - 10x$", ru: "$15 - 2(5x - 14) = 43 - 10x$" }
+            },
+            {
+                id: 2,
+                grade: 6,
+                isSuper: true,
+                topicCat: "module",
+                topic: { kk: "Модуль мен Дәреже", ru: "Степень и модуль" },
+                title: { kk: "Дәрежесі мен модулі бар күрделі теңдеу", ru: "Уравнение со степенью и модулем" },
+                value: { kk: "Академиялық адалдық", ru: "Академическая честность" },
+                aiAns: "$-2^3 \\cdot |2x - 6| + 16 = -32 \\implies -8 \\cdot |2x - 6| = -48 \\implies |2x - 6| = -6 \\implies x = 0$",
+                errStep: { kk: "ЖИ Модульдің теріс санға тең болмайтынын бұзды ($|2x - 6| = -6$) және соңында жасанды $x=0$ түбірін жаза салды.", ru: "ИИ проигнорировал правило неотрицательности модуля ($|2x-6| = -6$) и выдумал ложный корень." },
+                realSolution: { kk: "Модуль теріс санға тең болмайды. Шешімі жоқ ($\\emptyset$)", ru: "Модуль не может быть отрицательным. Решений нет ($\\emptyset$)" }
+            },
+            {
+                id: 3,
+                grade: 6,
+                isSuper: true,
+                topicCat: "rational",
+                topic: { kk: "Рационал бөлшектер", ru: "Рациональные дроби" },
+                title: { kk: "Рационал бөлшектерді ортақ бөлімге келтіру", ru: "Приведение сложных дробей к общему знаменателю" },
+                value: { kk: "Өз ісіне жауапкершілік", ru: "Ответственность за результат" },
+                aiAns: "$\\frac{5x - 2}{3} - \\frac{2x - 4}{4} = \\frac{20x - 8 - 6x - 12}{12} = \\frac{14x - 20}{12}$",
+                errStep: { kk: "Бөлшектерді азайтқанда екінші бөлшектің алымындағы жақша ашылып, $-(-4) = +4$ болып, $+12$ өзгеруі тиіс еді.", ru: "При вычитании дробей не был учтен минус перед числителем: $-(-4) \\cdot 3 = +12$." },
+                realSolution: { kk: "$\\frac{4(5x - 2) - 3(2x - 4)}{12} = \\frac{20x - 8 - 6x + 12}{12} = \\frac{14x + 4}{12}$", ru: "$\\frac{14x + 4}{12}$" }
+            },
+            {
+                id: 4,
+                grade: 6,
+                isSuper: true,
+                topicCat: "proportion",
+                topic: { kk: "Күрделі Пропорция", ru: "Сложная пропорция" },
+                title: { kk: "Үш рет тізбектеліп өзгерген баға есебі", ru: "3-этапное изменение стоимости" },
+                value: { kk: "Еңбекқорлық", ru: "Трудолюбие" },
+                aiAns: "\\text{Тауар бағасы +10\\%, -20\\%, +10\\% өзгерсе: } +10 - 20 + 10 = 0\\% \\text{ (баға өзгермейді).}",
+                errStep: { kk: "ЖИ пайыздарды жай қоса салды. Негізінде: $1.1 \\cdot 0.8 \\cdot 1.1 = 0.968$, яғни баға 3.2\\%-ға арзандаған.", ru: "ИИ просто сложил проценты. Правильный каскадный расчет: $1.1 \\cdot 0.8 \\cdot 1.1 = 0.968$ (цена упала на 3.2%)." },
+                realSolution: { kk: "\\text{Бастапқы бағадан 3.2\\%-ға арзандайды (96.8\\% болады)}", ru: "\\text{Уменьшится на 3.2\\% от первоначальной}" }
+            },
+            {
+                id: 5,
+                grade: 6,
+                isSuper: true,
+                topicCat: "equation",
+                topic: { kk: "Сызықтық теңдеулер", ru: "Линейные уравнения" },
+                title: { kk: "Теңдеу түрінде берілген күрделі пропорция", ru: "Сложная пропорция в виде уравнения" },
+                value: { kk: "Сыни ойлау", ru: "Критическое мышление" },
+                aiAns: "$\\frac{2x - 1}{-3} = \\frac{x + 5}{2} \\implies 2(2x - 1) = -3(x + 5) \\implies 4x - 2 = -3x + 15 \\implies 7x = 17 \\implies x = 2.4$",
+                errStep: { kk: "ЖИ $-3(x + 5)$ жақшасын ашқанда $-3 \\cdot 5 = -15$ болудың орнына $+15$ деп таңбадан шатасты.", ru: "При раскрытии скобок $-3(x + 5)$ ИИ записал $+15$ вместо $-15$." },
+                realSolution: { kk: "$4x - 2 = -3x - 15 \\implies 7x = -13 \\implies x = -\\frac{13}{7} = -1 \\frac{6}{7}$", ru: "$x = -1 \\frac{6}{7}$" }
+            },
+            {
+                id: 6,
+                grade: 6,
+                isSuper: false,
+                topicCat: "brackets",
+                topic: { kk: "Жақшаны ашу", ru: "Раскрытие скобок" },
+                title: { kk: "Теріс санға көбейту ережесі", ru: "Умножение на отрицательное число" },
+                value: { kk: "Академиялық адалдық", ru: "Академическая честность" },
+                aiAns: "$5 - 3(x - 2) = 5 - 3x - 6 = -1 - 3x$",
+                errStep: { kk: "Жақша ішіндегі -2-ні -3-ке көбейткенде таңбасы +6 болуы тиіс еді.", ru: "При умножении -2 на -3 знак должен быть +6." },
+                realSolution: { kk: "$5 - 3x + 6 = 11 - 3x$", ru: "$5 - 3x + 6 = 11 - 3x$" }
+            }
+        ];
+
+        const i18n = {
+            kk: {
+                navValues: "«Адал азамат»", navCases: "Кейстер банкі", navGen: "Промпт конструкторы", navSim: "Аудит тренажеры",
+                heroBadge: "«Адал азамат» – сапалы білім мен тәрбие негізі", heroTitle: "Math-Check: 6-сынып ЖИ аудиті",
+                heroDesc: "6-сынып математикасы сабақтарында жасанды интеллектті «қателесетін цифрлық оқушыға» айналдыру арқылы оқушылардың академикалық адалдығы мен сыни ойлауын дамыту әдістемесі.",
+                btnHeroCases: "Кейстерді көру", btnHeroSim: "Тренажерді бастау",
+                valTitle: "«Адал азамат» ұлттық тұжырымдамасы мен математика", valSub: "Математика сабағында қалыптасатын негізгі азаматтық қасиеттер",
+                v1: "Академиялық адалдық", v2: "Өз ісіне жауапкершілік", v3: "Сыни ойлау мәдениеті", v4: "Еңбекқорлық пен талап",
+                casesTitle: "6-сынып математика кейстерінің банкі", casesSub: "ҚР ББЖМ 6-сынып бағдарламасы бойынша ЖИ қателіктері салынған тапсырмалар",
+                fAll: "Барлық бағыттар", fSuper: "Көпқадамды (Күрделі)", fBr: "Жақшаны ашу", fMod: "Модуль", fProp: "Пропорция", fRat: "Рационал сандар", fEq: "Сызықтық теңдеулер",
+                genTitle: "Мұғалімге арналған промпт конструкторы", genDesc: "6-сынып тақырыптары бойынша ChatGPT немесе Gemini-ге арналған арнайы дидактикалық сұраныс дайындаңыз.",
+                lblTopic: "6-сынып математика бөлімі:", lblErr: "Жасырын логикалық қате түрі:", btnGenPrompt: "Промпт құрастыру", genCardTitle: "ЖИ-ге арналған промпт", btnCopy: "Көшіріп алу",
+                simTitle: "«Digital Auditor» интерактивті тренажеры", simSub: "Сарапшы рөліне ен: ЖИ шешіміндегі қатені тап және негізде",
+                simQTitle: "Тапсырма: Амалдарды орындаңыз және өрнекті ықшамдаңыз: $7 - 2(x - 4)$",
+                simStep1: "1-қадам: Жақшаны ашамыз: $7 - 2 \\cdot x - 2 \\cdot 4$",
+                simStep2: "2-қадам: Көбейтуді орындаймыз: $7 - 2x - 8$",
+                simStep3: "3-қадам: Ұқсас мүшелерді біріктіреміз: $(7 - 8) - 2x = -1 - 2x$",
+                simAiAns: "ЖИ жауабы: $-1 - 2x$",
+                simLblStep: "1. Жасанды интеллект қай қадамда логикалық қате жіберді?",
+                simOpt0: "Қадамды таңдаңыз...", simOpt1: "1-қадам (Жақшаны ашу)", simOpt2: "2-қадам (Көбейтуді орындау)", simOpt3: "3-қадам (Ұқсас мүшелерді біріктіру)",
+                simLblReason: "2. Математикалық негіздемеңіз бен «Адал азамат» түйіні:", btnSimSend: "Тексеруге жіберу", btnPrintLbl: "Бланкты жүктеу (PDF)",
+                btnAudit: "Аудит жүргізу", errLabel: "ЖИ қатесі:", solLabel: "Дұрыс шешім:",
+                pHeadTitle: "«DIGITAL AUDITOR» РАБОЧИЙ ЛИСТ / ЖҰМЫС ПАРАҒЫ",
+                pHeadSub: "6-сынып математикасы | Академиялық адалдық пен сыни ойлау аудиті",
+                pLblName: "Оқушының аты-жөні:", pLblClass: "Сыныбы:", pLblDate: "Күні:",
+                pSec1Title: "1. ТАҚЫРЫП ЖӘНЕ ТАПСЫРМА (БӨЛІМ):",
+                pSec2Title: "2. ЖАСАНДЫ ИНТЕЛЛЕКТТІҢ ШЕШІМІ (АУДИТ ОБЪЕКТІСІ):",
+                pSec3Title: "3. САРАПШЫ АУДИТІ ЖӘНЕ ДӘЛЕЛДЕМЕ:", pLblStepNum: "Қате жіберілген қадам № / логикалық ауытқу:", pLblReason: "Математикалық ережесі мен негіздемесі:",
+                pSec4Title: "4. ДҰРЫС МАТЕМАТИКАЛЫҚ ШЕШІМІ:",
+                pSec5Title: "5. «АДАЛ АЗАМАТ» ӨНЕГЕСІ (Азаматтық рефлексия):", pSec5Sub: "Дайын жауапты көшіре салу неліктен өзіңді де, өзгелерді де алдау болып табылады?"
+            },
+            ru: {
+                navValues: "«Адал азамат»", navCases: "Банк кейсов", navGen: "Конструктор промптов", navSim: "Тренажер аудита",
+                heroBadge: "«Адал азамат» – основа качественного образования", heroTitle: "Math-Check: аудит ИИ в 6 классе",
+                heroDesc: "Методика превращения ИИ в «ошибающегося ученика» на уроках математики 6 класса для развития академической честности и критического мышления.",
+                btnHeroCases: "Смотреть кейсы", btnHeroSim: "Начать тренажер",
+                valTitle: "Национальная концепция «Адал азамат» и математика", valSub: "Ключевые гражданские качества, формируемые на уроках математики",
+                v1: "Академическая честность", v2: "Ответственность за результат", v3: "Культура критического мышления", v4: "Трудолюбие и требовательность",
+                casesTitle: "Банк кейсов по математике 6 класса", casesSub: "Задачи с заложенными ошибками ИИ по программе ГОСО РК для 6 класса",
+                fAll: "Все направления", fSuper: "Многошаговые (Сложные)", fBr: "Раскрытие скобок", fMod: "Модуль", fProp: "Пропорция", fRat: "Рациональные числа", fEq: "Линейные уравнения",
+                genTitle: "Конструктор промптов для учителя", genDesc: "Создайте дидактический запрос для ChatGPT / Gemini по темам 6 класса за 30 секунд.",
+                lblTopic: "Раздел математики 6 класса:", lblErr: "Тип скрытой логической ошибки:", btnGenPrompt: "Сгенерировать промпт", genCardTitle: "Промпт для ИИ", btnCopy: "Копировать",
+                simTitle: "Интерактивный тренажер «Digital Auditor»", simSub: "Вживись в роль эксперта: найди и аргументируй ошибку ИИ",
+                simQTitle: "Задание: Выполните действия и упростите выражение: $7 - 2(x - 4)$",
+                simStep1: "1-шаг: Раскрываем скобки: $7 - 2 \\cdot x - 2 \\cdot 4$",
+                simStep2: "2-шаг: Выполняем умножение: $7 - 2x - 8$",
+                simStep3: "3-шаг: Приводим подобные слагаемые: $(7 - 8) - 2x = -1 - 2x$",
+                simAiAns: "Ответ ИИ: $-1 - 2x$",
+                simLblStep: "1. На каком шаге ИИ допустил логическую ошибку?",
+                simOpt0: "Выберите шаг...", simOpt1: "1-шаг (Раскрытие скобок)", simOpt2: "2-шаг (Умножение)", simOpt3: "3-шаг (Приведение подобных)",
+                simLblReason: "2. Математическая аргументация и вывод «Адал азамат»:", btnSimSend: "Отправить на проверку", btnPrintLbl: "Скачать бланк (PDF)",
+                btnAudit: "Провести аудит", errLabel: "Ошибка ИИ:", solLabel: "Правильное решение:",
+                pHeadTitle: "«DIGITAL AUDITOR» РАБОЧИЙ ЛИСТ / ЖҰМЫС ПАРАҒЫ",
+                pHeadSub: "Математика 6 класса | Аудит академической честности и критического мышления",
+                pLblName: "ФИО ученика:", pLblClass: "Класс:", pLblDate: "Дата:",
+                pSec1Title: "1. ТЕМА И ЗАДАНИЕ (РАЗДЕЛ):",
+                pSec2Title: "2. РЕШЕНИЕ ИСКУССТВЕННОГО ИНТЕЛЛЕКТА (ОБЪЕКТ АУДИТА):",
+                pSec3Title: "3. ЭКСПЕРТНЫЙ АУДИТ И АРГУМЕНТАЦИЯ:", pLblStepNum: "№ шага с ошибкой / логическое отклонение:", pLblReason: "Математическое правило и обоснование:",
+                pSec4Title: "4. ЭТАЛОННОЕ МАТЕМАТИЧЕСКОЕ РЕШЕНИЕ:",
+                pSec5Title: "5. УРОК «АДАЛ АЗАМАТ» (Гражданская рефлексия):", pSec5Sub: "Почему списывание готового ответа является обманом себя и окружающих?"
+            }
+        };
+
+        function renderMathInBody() {
+            if (window.renderMathInElement) {
+                renderMathInElement(document.body, {
+                    delimiters: [
+                        {left: '$$', right: '$$', display: true},
+                        {left: '$', right: '$', display: false}
+                    ],
+                    throwOnError: false
+                });
+            }
+        }
+
+        function initQRCode(url) {
+            const container = document.getElementById("qrcode");
+            container.innerHTML = "";
+            qrCodeInstance = new QRCode(container, {
+                text: url,
+                width: 70,
+                height: 70,
+                colorDark : "#000000",
+                colorLight : "#ffffff",
+                correctLevel : QRCode.CorrectLevel.H
+            });
+        }
+
+        function updateQRCode() {
+            const url = document.getElementById('qr-url-input').value;
+            if (url) {
+                initQRCode(url);
+            }
+        }
+
+        function loadCaseToSheet(caseId) {
+            const c = casesData.find(item => item.id === caseId);
+            if (!c) return;
+
+            document.getElementById('p-sec1-q').innerHTML = `<strong>[${c.topic[currentLang]}]:</strong> ${c.title[currentLang]}`;
+            document.getElementById('p-sec2-sol').innerHTML = `${c.aiAns}`;
+            renderMathInBody();
+            document.getElementById('printable-worksheet').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function renderSheetSelector() {
+            const container = document.getElementById('sheet-case-selector');
+            container.innerHTML = '';
+            casesData.forEach(c => {
+                const btn = document.createElement('button');
+                btn.className = 'btn btn-outline-dark btn-sm fw-semibold';
+                btn.innerHTML = `<i class="bi bi-file-earmark-check me-1"></i>${c.topic[currentLang]}: ${c.title[currentLang]}`;
+                btn.onclick = () => loadCaseToSheet(c.id);
+                container.appendChild(btn);
+            });
+        }
+
+        function switchLang(lang) {
+            currentLang = lang;
+            document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(`btn-${lang}`).classList.add('active');
+
+            const t = i18n[lang];
+            document.getElementById('nav-values').innerText = t.navValues;
+            document.getElementById('nav-cases').innerText = t.navCases;
+            document.getElementById('nav-gen').innerText = t.navGen;
+            document.getElementById('nav-sim').innerText = t.navSim;
+            document.getElementById('hero-badge').innerText = t.heroBadge;
+            document.getElementById('hero-title').innerText = t.heroTitle;
+            document.getElementById('hero-desc').innerText = t.heroDesc;
+            document.getElementById('btn-hero-cases').innerText = t.btnHeroCases;
+            document.getElementById('btn-hero-sim').innerText = t.btnHeroSim;
+            
+            document.getElementById('val-title').innerText = t.valTitle;
+            document.getElementById('val-sub').innerText = t.valSub;
+            document.getElementById('v1').innerText = t.v1;
+            document.getElementById('v2').innerText = t.v2;
+            document.getElementById('v3').innerText = t.v3;
+            document.getElementById('v4').innerText = t.v4;
+
+            document.getElementById('cases-title').innerText = t.casesTitle;
+            document.getElementById('cases-sub').innerText = t.casesSub;
+            document.getElementById('f-all').innerText = t.fAll;
+            document.getElementById('f-super').innerText = t.fSuper;
+            document.getElementById('f-br').innerText = t.fBr;
+            document.getElementById('f-mod').innerText = t.fMod;
+            document.getElementById('f-prop').innerText = t.fProp;
+            document.getElementById('f-rat').innerText = t.fRat;
+            document.getElementById('f-eq').innerText = t.fEq;
+
+            document.getElementById('gen-title').innerText = t.genTitle;
+            document.getElementById('gen-desc').innerText = t.genDesc;
+            document.getElementById('lbl-topic').innerText = t.lblTopic;
+            document.getElementById('lbl-err').innerText = t.lblErr;
+            document.getElementById('btn-gen-prompt').innerText = t.btnGenPrompt;
+            document.getElementById('gen-card-title').innerText = t.genCardTitle;
+            document.getElementById('btn-copy').innerText = t.btnCopy;
+
+            document.getElementById('sim-title').innerText = t.simTitle;
+            document.getElementById('sim-sub').innerText = t.simSub;
+            document.getElementById('sim-q-title').innerText = t.simQTitle;
+            document.getElementById('sim-step1').innerHTML = `<strong>${lang === 'kk' ? '1-қадам' : '1-шаг'}:</strong> ${lang === 'kk' ? 'Жақшаны ашамыз' : 'Раскрываем скобки'}: $7 - 2 \\cdot x - 2 \\cdot 4$`;
+            document.getElementById('sim-step2').innerHTML = `<strong>${lang === 'kk' ? '2-қадам' : '2-шаг'}:</strong> ${lang === 'kk' ? 'Көбейтуді орындаймыз' : 'Выполняем умножение'}: $7 - 2x - 8$`;
+            document.getElementById('sim-step3').innerHTML = `<strong>${lang === 'kk' ? '3-қадам' : '3-шаг'}:</strong> ${lang === 'kk' ? 'Ұқсас мүшелерді біріктіреміз' : 'Приводим подобные'}: $(7 - 8) - 2x = -1 - 2x$`;
+            document.getElementById('sim-ai-ans').innerText = t.simAiAns;
+
+            document.getElementById('sim-lbl-step').innerText = t.simLblStep;
+            document.getElementById('sim-opt-0').innerText = t.simOpt0;
+            document.getElementById('sim-opt-1').innerText = t.simOpt1;
+            document.getElementById('sim-opt-2').innerText = t.simOpt2;
+            document.getElementById('sim-opt-3').innerText = t.simOpt3;
+            document.getElementById('sim-lbl-reason').innerText = t.simLblReason;
+            document.getElementById('btn-sim-send').innerText = t.btnSimSend;
+            document.getElementById('btn-print-lbl').innerText = t.btnPrintLbl;
+
+            // Бланк сөздерін аудару
+            document.getElementById('p-head-title').innerText = t.pHeadTitle;
+            document.getElementById('p-head-sub').innerText = t.pHeadSub;
+            document.getElementById('p-lbl-name').innerText = t.pLblName;
+            document.getElementById('p-lbl-class').innerText = t.pLblClass;
+            document.getElementById('p-lbl-date').innerText = t.pLblDate;
+            document.getElementById('p-sec1-title').innerText = t.pSec1Title;
+            document.getElementById('p-sec2-title').innerText = t.pSec2Title;
+            document.getElementById('p-sec3-title').innerText = t.pSec3Title;
+            document.getElementById('p-lbl-step-num').innerText = t.pLblStepNum;
+            document.getElementById('p-lbl-reason').innerText = t.pLblReason;
+            document.getElementById('p-sec4-title').innerText = t.pSec4Title;
+            document.getElementById('p-sec5-title').innerText = t.pSec5Title;
+            document.getElementById('p-sec5-sub').innerText = t.pSec5Sub;
+
+            renderCases();
+            renderSheetSelector();
+        }
+
+        function renderCases(filterTopic = 'all') {
+            const container = document.getElementById('cases-container');
+            container.innerHTML = '';
+            const t = i18n[currentLang];
+
+            let filtered = casesData;
+            if (filterTopic === 'super') {
+                filtered = casesData.filter(c => c.isSuper);
+            } else if (filterTopic !== 'all') {
+                filtered = casesData.filter(c => c.topicCat === filterTopic);
+            }
+
+            filtered.forEach((c) => {
+                const superBadge = c.isSuper ? `<span class="badge badge-super me-1"><i class="bi bi-lightning-charge-fill me-1"></i>Көпқадамды</span>` : '';
+                const card = `
+                    <div class="col-md-6 col-lg-4">
+                        <div class="card card-custom h-100 p-3">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <div>
+                                    ${superBadge}
+                                    <span class="badge badge-topic">${c.topic[currentLang]}</span>
+                                </div>
+                                <span class="badge badge-value"><i class="bi bi-star-fill me-1"></i>${c.value[currentLang]}</span>
+                            </div>
+                            <h5 class="fw-bold fs-6 mt-1 text-dark">${c.title[currentLang]}</h5>
+                            <div class="bg-light p-2.5 rounded my-2 font-monospace small border">
+                                <strong>ЖИ / ИИ:</strong> ${c.aiAns}
+                            </div>
+                            <div class="collapse mt-2" id="case-details-${c.id}">
+                                <div class="alert alert-danger p-2 small mb-2 border-0">
+                                    <strong>${t.errLabel}</strong> ${c.errStep[currentLang]}
+                                </div>
+                                <div class="alert alert-success p-2 small mb-0 border-0">
+                                    <strong>${t.solLabel}</strong> ${c.realSolution[currentLang]}
+                                </div>
+                            </div>
+                            <div class="d-flex gap-2 mt-3">
+                                <button class="btn btn-sm btn-outline-primary flex-grow-1 fw-bold rounded-3" type="button" data-bs-toggle="collapse" data-bs-target="#case-details-${c.id}">
+                                    <i class="bi bi-search me-1"></i>${t.btnAudit}
+                                </button>
+                                <button class="btn btn-sm btn-success fw-bold rounded-3" type="button" onclick="loadCaseToSheet(${c.id})">
+                                    <i class="bi bi-file-earmark-plus me-1"></i>Бланкке
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                container.innerHTML += card;
+            });
+            renderMathInBody();
+        }
+
+        document.getElementById('topic-filter').addEventListener('click', (e) => {
+            if (e.target.tagName === 'BUTTON' || e.target.parentElement.tagName === 'BUTTON') {
+                const btn = e.target.tagName === 'BUTTON' ? e.target : e.target.parentElement;
+                document.querySelectorAll('#topic-filter button').forEach(b => {
+                    b.classList.remove('btn-primary', 'active');
+                    if (!b.id.includes('super')) b.classList.add('btn-outline-primary');
+                });
+                btn.classList.add('btn-primary', 'active');
+                renderCases(btn.dataset.topic);
+            }
+        });
+
+        function generatePrompt() {
+            const topic = document.getElementById('p-topic').value;
+            const err = document.getElementById('p-err').value;
+            
+            const promptText = currentLang === 'kk'
+                ? `Сіз 6-сынып математика мұғалімісіз. ҚР ББЖМ 6-сынып бағдарламасы бойынша оқушылардың академикалық адалдығы мен сыни ойлауын дамытуға арналған аудиторлық тапсырма дайындаңыз.\n\nБөлім: ${topic}.\nТапсырма шешімін ЖИ атынан ұсыныңыз. Шешім сырттай өте сенімді әрі логикалы көрінгенімен, ішінде жасырын қате жіберіңіз: «${err}».\n\nСоңында қате жауапты шығарыңыз. Оқушы өз бетінше сарапшылық аудит жүргізуі тиіс.`
+                : `Вы — учитель математики 6 класса. Создайте задание для аудита академической честности и критического мышления учащихся по программе ГОСО РК (6 класс).\n\nРаздел: ${topic}.\nСгенерируйте решение от имени ИИ. Решение должно выглядеть внешне убедительно, но содержать скрытую ошибку: «${err}».\n\nВ конце выведите неверный ответ. Ученик должен провести экспертный аудит самостоятельно.`;
+
+            document.getElementById('prompt-result').innerText = promptText;
+        }
+
+        function copyPrompt() {
+            const text = document.getElementById('prompt-result').innerText;
+            navigator.clipboard.writeText(text);
+            alert(currentLang === 'kk' ? 'Промпт көшірілді!' : 'Промпт скопирован!');
+        }
+
+        function checkAudit(e) {
+            e.preventDefault();
+            const step = document.getElementById('user-step').value;
+            const feedback = document.getElementById('audit-feedback');
+            feedback.classList.remove('d-none');
+            
+            if (step === "1") {
+                feedback.className = "alert alert-success border-0 shadow-sm p-3 mt-3 rounded-3 animate-fade-in";
+                feedback.innerHTML = currentLang === 'kk'
+                    ? "<strong>Жарайсың! Өте қырағы сарапшысың!</strong><br>1-қадамда ЖИ жақшаны ашқанда -2-ні -4-ке көбейтуді ұмытып, -8 деп жаза салған. Негізі таңба +8 болуы тиіс еді: $7 - 2x + 8 = 15 - 2x$.<br><small class='text-muted mt-1 d-block'><strong>«Адал азамат» түйіні:</strong> Тексермей көшіру – білімге жасалған қиянат. Нағыз азамат әрқашан ақиқатты жақтайды!</small>"
+                    : "<strong>Отлично! Вы проявили экспертную зоркость!</strong><br>На Step 1 ИИ при раскрытии скобок умножил -2 на -4 и получил -8 вместо +8. Правильно: $7 - 2x + 8 = 15 - 2x$.<br><small class='text-muted mt-1 d-block'><strong>Вывод «Адал азамат»:</strong> Списывать без проверки — обман самого себя. Честный гражданин всегда ищет истину!</small>";
+            } else {
+                feedback.className = "alert alert-danger border-0 shadow-sm p-3 mt-3 rounded-3 animate-fade-in";
+                feedback.innerHTML = currentLang === 'kk'
+                    ? "<strong>Әлі де мұқият қарап шық!</strong><br>1-қадамдағы жақшаны ашу ережесіне назар аудар: -2 санын -4-ке көбейткенде қандай таңба шығуы керек еді?"
+                    : "<strong>Попробуйте еще раз!</strong><br>Обратите внимание на Шаг 1: какой знак должен получиться при умножении -2 на -4?";
+            }
+            renderMathInBody();
+        }
+
+        function printWorksheet() {
+            window.print();
+        }
+
+        document.addEventListener('DOMContentLoaded', () => { 
+            renderCases(); 
+            renderSheetSelector();
+            initQRCode("file:///Users/dalilasagandykova/Downloads/gemini-code-1793036727825.html#auditor");
+        });
+    </script>
+</body>
+</html>
